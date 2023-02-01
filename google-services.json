@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "843134938020",
+    "project_id": "tamasa-1e24b",
+    "storage_bucket": "tamasa-1e24b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843134938020:android:303c6f55b71b09cc05ef31",
+        "android_client_info": {
+          "package_name": "host.exp.exponent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "843134938020-9vicgverrfiaulkgmda9o0c4dedhp8qi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqlSTD56m_kND0Zw8vDnrUAegdpgLf21U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "843134938020-9vicgverrfiaulkgmda9o0c4dedhp8qi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "843134938020-3shrucqslg7idpq2dummnf5eurp82bqj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
