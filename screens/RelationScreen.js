@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Chip } from "react-native-paper";
 import DatePicker from "react-native-datepicker";
 import relationsService from "../services/relations";
 import contactsService from "../services/contacts";
+import { Menu, Chip } from "react-native-paper";
 
 const RelationScreen = ({ route: { params: params }, navigation }) => {
   const [description, setDescription] = useState("");
@@ -20,11 +20,23 @@ const RelationScreen = ({ route: { params: params }, navigation }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [contactArr, setContactArr] = useState([]);
   const [contactList, setContactList] = useState([]);
+  const [searchData, setSearchData] = useState([]);
+
   const incompleteForm = !description || !date;
 
   const addRelationService = () => {
+    const contactIdArr = [];
+    contactArr.map((data) => {
+      contactIdArr.push(data.id);
+    });
+    console.log("ddd", contactIdArr);
     relationsService
-      .createRelation(contactId, params?.relationTypeId, location, description)
+      .createRelation(
+        contactIdArr,
+        params?.relationTypeId,
+        location,
+        description
+      )
       .then((res) => {
         console.log("createRelation", res);
       })
@@ -37,7 +49,8 @@ const RelationScreen = ({ route: { params: params }, navigation }) => {
     contactsService
       .searchOnMyContacts(searchTerm)
       .then((res) => {
-        console.log("searchOnMyContacts", res);
+        console.log("searchOnMyContacts", res?.data);
+        setSearchData(res?.data);
       })
       .catch((err) => {
         return err;
@@ -57,42 +70,21 @@ const RelationScreen = ({ route: { params: params }, navigation }) => {
   useEffect(() => {
     setLoading(true);
     const delayDebounceFn = setTimeout(() => {
-      if (searchTerm.length > 2) searchOnMyContactsService();
-      else {
-        setLoading(false);
-      }
+      searchOnMyContactsService();
     }, 2000);
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
-  useEffect(() => {
-    const keyDownHandler = (event) => {
-      console.log("User pressed: ", event.key);
-
-      if (event.key === "Enter" && searchTerm != "") {
-        console.log("fun", searchTerm);
-        // event.preventDefault();
-        const arr = contactArr;
-        var index = arr.findIndex((x) => x.name == searchTerm);
-        // here you can check specific property for an object whether it exist in your array or not
-
-        index === -1
-          ? arr.push({ name: searchTerm })
-          : console.log("object already exists");
-
-        setContactArr(arr);
-        setSearchTerm("");
-        console.log("hi", arr, searchTerm);
-        // 👇️ your logic here
-      }
-    };
-
-    document.addEventListener("keydown", keyDownHandler);
-
-    return () => {
-      // document.removeEventListener("keydown", keyDownHandler);
-    };
-  }, [searchTerm]);
+  const handleAddingContact = (name, id) => {
+    const arr = contactArr;
+    var index = arr.findIndex((x) => x.id == id);
+    index === -1
+      ? arr.push({ name: name, id: id })
+      : console.log("object already exists");
+    setContactArr(arr);
+    setSearchData([]);
+    setSearchTerm("");
+  };
 
   return (
     <SafeAreaView
@@ -115,6 +107,20 @@ const RelationScreen = ({ route: { params: params }, navigation }) => {
           setSearchTerm(text);
         }}
       />
+
+      <View style={{}}>
+        {searchData != [] &&
+          searchData.map((data, index) => {
+            return (
+              <Menu.Item
+                key={index}
+                title={data?.name}
+                style={{ borderWidth: 1 }}
+                onPress={() => handleAddingContact(data?.name, data?.id)}
+              />
+            );
+          })}
+      </View>
       <View
         style={{
           flexWrap: "wrap",
@@ -124,11 +130,16 @@ const RelationScreen = ({ route: { params: params }, navigation }) => {
           justifyContent: "center",
         }}
       >
-        {contactArr.map((data) => {
+        {contactArr.map((data, index) => {
           return (
             <Chip
+              key={index}
               style={{ fontSize: 20, margin: 2 }}
-              onClose={() => console.log("Pressed")}
+              onClose={() => {
+                const arr = contactArr.filter((item) => item != data);
+                setContactArr(arr);
+                console.log(index, arr);
+              }}
             >
               {data.name}
             </Chip>

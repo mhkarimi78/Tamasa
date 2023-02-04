@@ -14,8 +14,8 @@ class userServices {
       passWord: passWord,
     });
   }
-  getUserInfo(userId) {
-    return AxiosBase.get(`GetUsdersInfoo/${userId}`);
+  getUserInfo() {
+    return AxiosBase.get(`GetUsdersInfoo`);
   }
   updateMyInfo(email, phone, passWord) {
     return AxiosBase.get("UpdateMyInfoos", {

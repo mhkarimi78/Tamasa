@@ -7,20 +7,23 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { Chip } from "react-native-paper";
 import userServices from "../services/users";
 
 const ModalScreen = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [passWord, setPassWord] = useState("");
+  const [relationTypes, setRelationTypes] = useState([]);
   const incompleteForm = !email || !phone || !passWord;
   const userId = localStorage.getItem("userId");
 
   const getUserInfoService = () => {
     userServices
-      .getUserInfo(userId)
+      .getUserInfo()
       .then((res) => {
         console.log("getUserInfo", res);
+        setRelationTypes;
       })
       .catch((err) => {
         return err;
@@ -65,6 +68,7 @@ const ModalScreen = () => {
             fontWeight: "bold",
             fontSize: 20,
             fontFamily: "BoldVazir",
+            marginTop: 10,
           }}
         >
           تماسا
@@ -94,6 +98,17 @@ const ModalScreen = () => {
         keyboardType="numeric"
         onChangeText={(text) => setPassWord(text)}
       />
+      {/* <Text style={style.stepsText}>انواع روابط من</Text> */}
+      {/* {contactArr.map((data) => {
+        return (
+          <Chip
+            style={{ fontSize: 20, margin: 2 }}
+            onClose={() => console.log("Pressed")}
+          >
+            {data.name}
+          </Chip>
+        );
+      })} */}
       <TouchableOpacity
         style={{
           width: 150,

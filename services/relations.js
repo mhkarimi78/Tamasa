@@ -14,7 +14,7 @@ class relationsService {
     });
   }
   getMyRelation() {
-    return AxiosBase.get(`GetMyRelations`);
+    return AxiosBase.get(`GetMyRelationss`);
   }
   getRelationTypes() {
     return AxiosBase.get(`GetSRelationType`);

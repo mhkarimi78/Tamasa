@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/core";
+import { Appbar, ActivityIndicator, MD2Colors } from "react-native-paper";
 import userServices from "../services/users";
 import jwt_decode from "jwt-decode";
 
@@ -15,13 +16,16 @@ const LoginScreen = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [error, setError] = useState("اکانت ندارم. ثبت نام");
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const incompleteForm = !email || !password;
 
   const loginService = () => {
+    setLoading(true);
     userServices
       .login(email, password)
       .then((res) => {
+        setLoading(false);
         console.log("d", res.data);
         if (res.data.hasError == true) {
           if (res.data.error == "This User does  Not Exist")
@@ -33,6 +37,7 @@ const LoginScreen = () => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         return err;
       });
   };
@@ -88,7 +93,13 @@ const LoginScreen = () => {
       />
       <View style={{ margin: 20 }}>
         <Text
-          style={[style.textInput, { fontFamily: "regularvazir" }]}
+          style={[
+            style.textInput,
+            {
+              fontFamily: "regularvazir",
+              color: error != "اکانت ندارم. ثبت نام" ? "red" : "black",
+            },
+          ]}
           onPress={() => navigation.navigate("SignUp")}
         >
           {error}
@@ -106,15 +117,19 @@ const LoginScreen = () => {
         disabled={incompleteForm}
         onPress={loginService}
       >
-        <Text
-          style={{
-            textAlign: "center",
-            color: "white",
-            fontFamily: "BoldVazir",
-          }}
-        >
-          ورود
-        </Text>
+        {loading ? (
+          <ActivityIndicator animating={true} color={MD2Colors.red800} />
+        ) : (
+          <Text
+            style={{
+              textAlign: "center",
+              color: "white",
+              fontFamily: "BoldVazir",
+            }}
+          >
+            ورود
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );

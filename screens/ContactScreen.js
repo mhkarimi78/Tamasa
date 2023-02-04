@@ -27,19 +27,29 @@ const ContactScreen = ({ navigation }) => {
       });
   };
   const searchOnMyContactsService = () => {
+    setLoading(true);
     contactsService
-      .searchOnMyContacts(searchTerm, propertyName)
+      .searchOnMyContacts(searchTerm)
       .then((res) => {
-        console.log("searchOnMyContacts", res);
+        console.log("searchOnMyContacts", res.data);
+        setContactData(res?.data);
+        setLoading(false);
       })
       .catch((err) => {
         return err;
+        setLoading(false);
       });
   };
   useEffect(() => {
     getMyContactsService();
   }, []);
-
+  useEffect(() => {
+    setLoading(true);
+    const delayDebounceFn = setTimeout(() => {
+      searchTerm.length > 0 ? searchOnMyContactsService() : setLoading(false);
+    }, 2000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
   return (
     <ScrollView>
       <Appbar.Header>
@@ -59,7 +69,10 @@ const ContactScreen = ({ navigation }) => {
         />
         <Appbar.Action
           icon="magnify"
-          onPress={() => setShowSearch(!showSearch)}
+          onPress={() => {
+            getMyContactsService();
+            setShowSearch(!showSearch);
+          }}
         />
       </Appbar.Header>
       <View
@@ -78,10 +91,14 @@ const ContactScreen = ({ navigation }) => {
           </View>
         )}
         {loading ? (
-          <ActivityIndicator animating={true} color={MD2Colors.red800} />
+          <ActivityIndicator
+            animating={true}
+            color={MD2Colors.red800}
+            style={{ marginTop: 20 }}
+          />
         ) : contactData.length == 0 ? (
-          <Text style={[style.title, { textAlign: "center" }]}>
-            شما مخاطبی ندارید.اولین مخاطب خود را بیافزایید
+          <Text style={[style.title, { textAlign: "center", marginTop: 20 }]}>
+            شما مخاطبی ندارید
           </Text>
         ) : (
           contactData?.map((res) => {

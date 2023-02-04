@@ -13,7 +13,7 @@ class contactsService {
   getMyContacts() {
     return AxiosBase.get(`GetMyContacts`);
   }
-  searchOnMyContacts(searchTerm, propertyName = "contactName") {
+  searchOnMyContacts(searchTerm) {
     return AxiosBase.post(`SearchOnMyCantacts/${searchTerm}`);
   }
 }

@@ -65,8 +65,13 @@ const HomeScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate("Modal")}>
             <Image style={style.img} source={require("../static/logo.png")} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Setting")}>
-            <Ionicons size={40} color={"#6495ED"} name="settings" />
+          <TouchableOpacity
+            onPress={
+              () => localStorage.setItem("token", "undefined")
+              //  navigation.navigate("Setting")
+            }
+          >
+            <Ionicons size={40} color={"#6495ED"} name="exit" />
           </TouchableOpacity>
         </View>
         <View style={style.swiperContainer}>
