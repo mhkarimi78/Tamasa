@@ -1,26 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Button, Card, Text, Appbar } from "react-native-paper";
+import { Searchbar } from "react-native-paper";
 import relationsService from "../services/relations";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 const MyRelationsScreen = ({ navigation }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [relationData, setRelationData] = useState([]);
   const getAllRelationsService = () => {
     console.log("here");
     relationsService
-      .getAllRelations()
+      .getMyRelation()
       .then((res) => {
         console.log("re", res);
+        setRelationData(res.data.result);
       })
       .catch((err) => {
         console.log("err");
         return err;
       });
   };
-  // useEffect(() => {
-  //   getAllRelationsService();
-  // }, []);
+  useEffect(() => {
+    getAllRelationsService();
+  }, []);
 
   return (
     <ScrollView>
@@ -36,13 +41,25 @@ const MyRelationsScreen = ({ navigation }) => {
           }}
         />
         {/* <Appbar.Action icon="calendasr" onPress={() => {}} /> */}
-        <Appbar.Action icon="magnify" onPress={() => {}} />
+        <Appbar.Action
+          icon="magnify"
+          onPress={() => setShowSearch(!showSearch)}
+        />
       </Appbar.Header>
       <View
         style={{
           marginVertical: 20,
         }}
       >
+        {showSearch && (
+          <View style={{ margin: 4, marginHorizontal: "10%" }}>
+            <Searchbar
+              placeholder="جستجو"
+              onChangeText={(query) => setSearchTerm(query)}
+              value={searchTerm}
+            />
+          </View>
+        )}
         {[1, 1, 1, 1, 1, 1, 1].map(() => {
           return (
             <Card

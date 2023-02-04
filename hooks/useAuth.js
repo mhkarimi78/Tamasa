@@ -6,21 +6,19 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const token = localStorage.getItem("token");
-  console.log("d", token);
 
   return (
     <AuthContext.Provider
       value={{
         user:
-          token != null
-            ?
-          {
-            name: "mahsa",
-            photoURL:
-              "https://img01.ztat.net/article/spp-media-p1/52b02f740d0143d6b882c221dae797b8/b9a178307a2f4d4aa7038483c5cb27b1.jpg?imwidth=1800&filter=packshot",
-          }
-        :
-         null,
+          token != null && token != "undefined"
+            ? {
+                name: "mahsa",
+                photoURL:
+                  "https://img01.ztat.net/article/spp-media-p1/52b02f740d0143d6b882c221dae797b8/b9a178307a2f4d4aa7038483c5cb27b1.jpg?imwidth=1800&filter=packshot",
+              }
+            : 
+            null,
       }}
     >
       {children}

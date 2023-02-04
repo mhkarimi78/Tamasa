@@ -1,32 +1,99 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
+import { Chip } from "react-native-paper";
 import DatePicker from "react-native-datepicker";
 import relationsService from "../services/relations";
+import contactsService from "../services/contacts";
 
 const RelationScreen = ({ route: { params: params }, navigation }) => {
   const [description, setDescription] = useState("");
-  const [people, setPeople] = useState("");
   const [date, setDate] = useState("09-10-2021");
   const [location, setLocation] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [contactArr, setContactArr] = useState([]);
+  const [contactList, setContactList] = useState([]);
   const incompleteForm = !description || !date;
 
   const addRelationService = () => {
     relationsService
-      .addRelation(params?.relationType, location, description, date, people)
+      .createRelation(contactId, params?.relationTypeId, location, description)
       .then((res) => {
-        console.log("e", res);
+        console.log("createRelation", res);
       })
       .catch((err) => {
         return err;
       });
     navigation.goBack();
   };
+  const searchOnMyContactsService = () => {
+    contactsService
+      .searchOnMyContacts(searchTerm)
+      .then((res) => {
+        console.log("searchOnMyContacts", res);
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+  const getMyContactsService = () => {
+    contactsService
+      .getMyContacts()
+      .then((res) => {
+        setContactList();
+        console.log("getMyContacts", res);
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+  useEffect(() => {
+    setLoading(true);
+    const delayDebounceFn = setTimeout(() => {
+      if (searchTerm.length > 2) searchOnMyContactsService();
+      else {
+        setLoading(false);
+      }
+    }, 2000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const keyDownHandler = (event) => {
+      console.log("User pressed: ", event.key);
+
+      if (event.key === "Enter" && searchTerm != "") {
+        console.log("fun", searchTerm);
+        // event.preventDefault();
+        const arr = contactArr;
+        var index = arr.findIndex((x) => x.name == searchTerm);
+        // here you can check specific property for an object whether it exist in your array or not
+
+        index === -1
+          ? arr.push({ name: searchTerm })
+          : console.log("object already exists");
+
+        setContactArr(arr);
+        setSearchTerm("");
+        console.log("hi", arr, searchTerm);
+        // 👇️ your logic here
+      }
+    };
+
+    document.addEventListener("keydown", keyDownHandler);
+
+    return () => {
+      // document.removeEventListener("keydown", keyDownHandler);
+    };
+  }, [searchTerm]);
+
   return (
     <SafeAreaView
       style={{
@@ -40,11 +107,34 @@ const RelationScreen = ({ route: { params: params }, navigation }) => {
         فرد یا افرادی که با آنها ارتباط برقرار شد
       </Text>
       <TextInput
-        placeholder="افراد"
-        value={people}
+        placeholder="مخاطبین"
+        value={searchTerm}
         style={style.textInput}
-        onChangeText={(text) => setPeople(text)}
+        onChangeText={(text) => {
+          console.log("sss", text);
+          setSearchTerm(text);
+        }}
       />
+      <View
+        style={{
+          flexWrap: "wrap",
+          flexDirection: "row",
+          marginHorizontal: 10,
+          marginVertical: 4,
+          justifyContent: "center",
+        }}
+      >
+        {contactArr.map((data) => {
+          return (
+            <Chip
+              style={{ fontSize: 20, margin: 2 }}
+              onClose={() => console.log("Pressed")}
+            >
+              {data.name}
+            </Chip>
+          );
+        })}
+      </View>
       <Text style={style.stepsText}>تاریخ ارتباطی که برقرار شد</Text>
       <DatePicker
         placeholder="تاریخ را انتخاب کنید"

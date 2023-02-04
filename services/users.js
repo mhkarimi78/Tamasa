@@ -14,6 +14,16 @@ class userServices {
       passWord: passWord,
     });
   }
+  getUserInfo(userId) {
+    return AxiosBase.get(`GetUsdersInfoo/${userId}`);
+  }
+  updateMyInfo(email, phone, passWord) {
+    return AxiosBase.get("UpdateMyInfoos", {
+      Email: email,
+      Phone: phone,
+      pass: passWord,
+    });
+  }
 }
 
 export default new userServices();

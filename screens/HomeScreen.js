@@ -13,7 +13,6 @@ import { useNavigation } from "@react-navigation/core";
 import useAuth from "../hooks/useAuth";
 import Swiper from "react-native-deck-swiper";
 import { AntDesign } from "@expo/vector-icons";
-import { relationData } from "../static/data";
 import GButton from "../components/GButton";
 import relationsService from "../services/relations";
 
@@ -30,19 +29,21 @@ const HomeScreen = () => {
     relationsService
       .getRelationTypes()
       .then((res) => {
-        console.log("۱۱rr", res.data.result);
-        setRelationTypeData(res.data.result);
+        setRelationTypeData([
+          ...res.data.result,
+          { id: 0, relations: "ارتباط خود را اضافه کن" },
+        ]);
       })
       .catch((err) => {
         return err;
       });
   };
-  const createRelationTypeService = (relationType) => {
+  const createRelationTypeService = () => {
     relationsService
-      .createRelationType(relationType)
+      .createRelationType(newRelationType)
       .then((res) => {
         console.log("۲۲rr", res);
-        setRelationTypeData();
+        getRelationTypesService();
       })
       .catch((err) => {
         return err;
@@ -50,7 +51,8 @@ const HomeScreen = () => {
   };
   useEffect(() => {
     getRelationTypesService();
-    createRelationTypeService("جلسه حضوری");
+    // "سفرکاری" "رستوران" 'سینما' "خانوادگی" "تماس تلفنی"
+    // createRelationTypeService("سفرکاری");
   }, []);
 
   return (
@@ -70,7 +72,7 @@ const HomeScreen = () => {
         <View style={style.swiperContainer}>
           <Swiper
             ref={swipeRef}
-            cards={relationData}
+            cards={relationTypeData}
             renderCard={(card) => {
               return (
                 <View style={style.card}>
@@ -91,7 +93,7 @@ const HomeScreen = () => {
                         // adventurer-neutral
                         // micah
                         // open-peeps
-                        uri: `https://avatars.dicebear.com/api/adventurer-neutral/${card?.enName}.svg?b=%239da5e2&scale=50`,
+                        uri: `https://avatars.dicebear.com/api/adventurer-neutral/${card?.relations}.svg?b=%239da5e2&scale=50`,
                       }}
                     />
                     <TouchableOpacity
@@ -100,14 +102,15 @@ const HomeScreen = () => {
                         margin: 20,
                       }}
                       onPress={() => {
-                        if (card.enName == "add") setVisible(true);
+                        if (card.id == 0) setVisible(true);
                         else
                           navigation.navigate("Relation", {
-                            relationType: card?.occasion,
+                            relationType: card?.relations,
+                            relationTypeId: card?.id,
                           });
                       }}
                     >
-                      <Text style={style.text}>{card?.occasion}</Text>
+                      <Text style={style.text}>{card?.relations}</Text>
                     </TouchableOpacity>
                     <View
                       style={{
@@ -134,14 +137,13 @@ const HomeScreen = () => {
                 </View>
               );
             }}
-            onSwiped={(cardIndex, data) => {
-              console.log(cardIndex, data);
-              if (data.id == 1) {
+            onSwiped={(cardIndex) => {
+              if (cardIndex == 1) {
                 setDisableSwipeLeft(true);
               } else {
                 setDisableSwipeLeft(false);
               }
-              if (data.id == relationData?.length - 2) {
+              if (cardIndex == relationTypeData?.length - 2) {
                 setDisableSwipeRight(true);
               } else {
                 setDisableSwipeRight(false);
@@ -201,7 +203,13 @@ const HomeScreen = () => {
               />
             </Dialog.Content>
             <Dialog.Actions style={style.header}>
-              <GButton text="ثبت" onPress={() => setVisible(false)} />
+              <GButton
+                text="ثبت"
+                onPress={() => {
+                  createRelationTypeService();
+                  setVisible(false);
+                }}
+              />
             </Dialog.Actions>
           </Dialog>
         </Portal>

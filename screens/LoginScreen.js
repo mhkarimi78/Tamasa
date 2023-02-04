@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/core";
 import userServices from "../services/users";
-import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState(null);
@@ -24,9 +24,13 @@ const LoginScreen = () => {
       .then((res) => {
         console.log("d", res.data);
         if (res.data.hasError == true) {
-          if (res.data.error == "This User Is Not Exist")
+          if (res.data.error == "This User does  Not Exist")
             setError("چنین اکانتی موجود نیست، ثبت نام کنید");
-        } else localStorage.setItem("token", res.result);
+        } else {
+          var decoded = jwt_decode(res.data.result);
+          localStorage.setItem("token", res.data.result);
+          localStorage.setItem("userId", decoded.userId);
+        }
       })
       .catch((err) => {
         return err;
@@ -56,6 +60,7 @@ const LoginScreen = () => {
           style={{
             fontWeight: "bold",
             fontSize: 20,
+            fontFamily: "regularvazir",
           }}
         >
           تماسا
@@ -68,6 +73,8 @@ const LoginScreen = () => {
         placeholder="ایمیل"
         value={email}
         style={style.textInput}
+        keyboardType="email-address"
+        textContentType="emailAddress"
         onChangeText={(text) => setEmail(text)}
       />
       <Text style={style.stepsText}>رمز عبور خود را وارد کنید</Text>
@@ -75,6 +82,7 @@ const LoginScreen = () => {
         placeholder="رمز عبور"
         value={password}
         style={style.textInput}
+        textContentType="password"
         keyboardType="numeric"
         onChangeText={(text) => setPassword(text)}
       />
@@ -102,6 +110,7 @@ const LoginScreen = () => {
           style={{
             textAlign: "center",
             color: "white",
+            fontFamily: "BoldVazir",
           }}
         >
           ورود
@@ -126,8 +135,8 @@ const style = StyleSheet.create({
     marginTop: -50,
   },
   img: {
-    height: 50,
-    width: 50,
+    height: 80,
+    width: 80,
     borderRadius: 5,
   },
   card: {

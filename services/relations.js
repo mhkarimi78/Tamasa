@@ -2,9 +2,7 @@ import AxiosBase from "./AxiosBase";
 
 class relationsService {
   createRelationType(relationInput) {
-    return AxiosBase.post(`CreateRelationType`, {
-      realationInput: relationInput,
-    });
+    return AxiosBase.post(`CreateRelationType/${relationInput}`);
   }
   createRelation(contactId, relationTypeId, location, description) {
     return AxiosBase.post(`CreateRelation`, {
@@ -21,8 +19,11 @@ class relationsService {
   getRelationTypes() {
     return AxiosBase.get(`GetSRelationType`);
   }
-  searchOnMyRelation() {
-    return AxiosBase.get(`SearchOnRElation`);
+  searchOnMyRelation(searchTerm) {
+    return AxiosBase.get(`SearchOnRElation/${searchTerm}`);
+  }
+  searchOnMyRelationTypes(searchTerm) {
+    return AxiosBase.get(`SearchOnRElationTypes/${searchTerm}`);
   }
 }
 

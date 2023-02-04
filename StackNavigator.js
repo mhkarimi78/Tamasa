@@ -12,6 +12,7 @@ import RelationScreen from "./screens/RelationScreen";
 import MyRelationsScreen from "./screens/MyRelationsScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import RelationDetailScreen from "./screens/RelationDetailScreen";
+import AddNewContactScreen from "./screens/AddNewContactScreen";
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -28,6 +29,10 @@ const StackNavigator = () => {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Chat" component={ChatScreen} />
             <Stack.Screen name="Contacts" component={ContactScreen} />
+            <Stack.Screen
+              name="AddNewContact"
+              component={AddNewContactScreen}
+            />
             <Stack.Screen name="Setting" component={SettingScreen} />
             <Stack.Screen name="Relation" component={RelationScreen} />
             <Stack.Screen name="MyRelations" component={MyRelationsScreen} />

@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, StyleSheet, Image, View } from "react-native";
-import { Avatar, Button, Card, Text, Appbar } from "react-native-paper";
+import { Avatar, Button, Card, Chip, Text, Appbar } from "react-native-paper";
 
 const RelationDetailScreen = ({ navigation, route: { params: params } }) => {
   return (
@@ -17,7 +17,7 @@ const RelationDetailScreen = ({ navigation, route: { params: params } }) => {
           }}
         />
         {/* <Appbar.Action icon="calendasr" onPress={() => {}} /> */}
-        <Appbar.Action icon="magnify" onPress={() => {}} />
+        {/* <Appbar.Action icon="magnify" onPress={() => {}} /> */}
       </Appbar.Header>
       <View>
         <Image
@@ -46,9 +46,26 @@ const RelationDetailScreen = ({ navigation, route: { params: params } }) => {
             </Text>
             <Text variant="titleMedium">۲۴ دی ۱۴۰۱</Text>
           </View>
-          <Text variant="headlineMedium" style={style.text}>
-            با علی علوی و حسن کریمی و رضا خلوتی و علی نساب
-          </Text>
+          <View
+            style={{
+              flexWrap: "wrap",
+              flexDirection: "row",
+              marginHorizontal: 10,
+              marginVertical: 4,
+              // justifyContent: "center",
+            }}
+          >
+            {params?.contactArr?.map((data) => {
+              return (
+                <Chip
+                  style={{ fontSize: 20, margin: 2 }}
+                  onClose={() => console.log("Pressed")}
+                >
+                  {data.name}
+                </Chip>
+              );
+            })}
+          </View>
         </View>
       </View>
     </ScrollView>

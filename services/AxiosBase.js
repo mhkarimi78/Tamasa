@@ -11,9 +11,9 @@ const AxiosBase = axios.create({
     "Content-Type": "application/json",
     // "Content-Type": "application/x-www-form-urlencoded",
     Accept: "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Credentials": true,
+    // "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Headers": "*",
+    // "Access-Control-Allow-Credentials": true,
     // "x-apikey": "141",
   },
 });

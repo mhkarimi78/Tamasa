@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,39 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import userServices from "../services/users";
 
 const ModalScreen = () => {
-  const [image, setImage] = useState(null);
-  const [job, setJob] = useState(null);
-  const [age, setAge] = useState(null);
-  const incompleteForm = !image || !job || !age;
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [passWord, setPassWord] = useState("");
+  const incompleteForm = !email || !phone || !passWord;
+  const userId = localStorage.getItem("userId");
 
-  const updateUserProfile = () => {};
+  const getUserInfoService = () => {
+    userServices
+      .getUserInfo(userId)
+      .then((res) => {
+        console.log("getUserInfo", res);
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+  const updateMyInfoService = () => {
+    userServices
+      .updateMyInfo(email, phone, passWord)
+      .then((res) => {
+        console.log("updateMyInfo", res);
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+
+  useEffect(() => {
+    getUserInfoService();
+  }, []);
 
   return (
     <View
@@ -25,7 +50,7 @@ const ModalScreen = () => {
     >
       <View
         style={{
-          flexDirection: "row",
+          // flexDirection: "row",
           alignItems: "center",
           marginTop: 10,
         }}
@@ -39,34 +64,35 @@ const ModalScreen = () => {
           style={{
             fontWeight: "bold",
             fontSize: 20,
+            fontFamily: "BoldVazir",
           }}
         >
-          Tamasa
+          تماسا
         </Text>
       </View>
-      <Text style={style.welcomeText}>Welcome Mahsa Karimi</Text>
-      <Text style={style.stepsText}>Step 1: The profile Pic</Text>
+      <Text style={style.welcomeText}>خوش آمدید</Text>
+      <Text style={style.stepsText}>ایمیل خود را به روز رسانی کنید</Text>
       <TextInput
-        placeholder="Enter a profile Pic Url"
-        value={image}
+        placeholder="ایمیل"
+        value={email}
         style={style.textInput}
-        onChangeText={(text) => setImage(text)}
+        onChangeText={(text) => setEmail(text)}
       />
-      <Text style={style.stepsText}>Step 2: The Job</Text>
+      <Text style={style.stepsText}>شماره همراه جدید خود را وارد کنید</Text>
       <TextInput
-        placeholder="Enter your job"
-        value={job}
+        placeholder="شماره همراه"
+        value={phone}
         style={style.textInput}
-        onChangeText={(text) => setJob(text)}
+        onChangeText={(text) => setPhone(text)}
       />
-      <Text style={style.stepsText}>Step 1: The Age</Text>
+      <Text style={style.stepsText}>رمز عبور جدید خود را بنویسید</Text>
       <TextInput
-        placeholder="Enter your age"
-        value={age}
+        placeholder="رمز عبور"
+        value={passWord}
         style={style.textInput}
-        maxLength={2}
+        textContentType="password"
         keyboardType="numeric"
-        onChangeText={(text) => setAge(text)}
+        onChangeText={(text) => setPassWord(text)}
       />
       <TouchableOpacity
         style={{
@@ -78,15 +104,16 @@ const ModalScreen = () => {
           bottom: 20,
         }}
         disabled={incompleteForm}
-        onPress={updateUserProfile}
+        onPress={updateMyInfoService}
       >
         <Text
           style={{
             textAlign: "center",
             color: "white",
+            fontFamily: "BoldVazir",
           }}
         >
-          Update Profile
+          به روز رسانی پروفایل
         </Text>
       </TouchableOpacity>
     </View>
@@ -97,8 +124,8 @@ export default ModalScreen;
 
 const style = StyleSheet.create({
   img: {
-    height: 50,
-    width: 50,
+    height: 80,
+    width: 80,
     borderRadius: 5,
     marginRight: 5,
   },
@@ -106,6 +133,7 @@ const style = StyleSheet.create({
     color: "gray",
     marginTop: 20,
     fontWeight: "bold",
+    fontFamily: "BoldVazir",
   },
   stepsText: {
     color: "#6495ED",
@@ -113,10 +141,12 @@ const style = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     margin: 4,
+    fontFamily: "BoldVazir",
   },
   textInput: {
     padding: 2,
     textAlign: "center",
     borderWidth: 0,
+    fontFamily: "ThinVazir",
   },
 });

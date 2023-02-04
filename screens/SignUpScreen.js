@@ -30,7 +30,9 @@ const SignUpScreen = () => {
           setError("");
         } else {
           userServices.login(email, password).then((res) => {
-            localStorage.setItem("token", res.result);
+            localStorage.setItem("token", res?.data?.result);
+            var decoded = jwt_decode(res.data.result);
+            localStorage.setItem("userId", decoded.userId);
           });
         }
       })
@@ -70,6 +72,7 @@ const SignUpScreen = () => {
       <Text style={style.stepsText}>شماره همراه خود را وارد کنید</Text>
       <TextInput
         placeholder="شماره همراه "
+        keyboardType="phone-pad"
         value={phone}
         style={style.textInput}
         onChangeText={(text) => setPhone(text)}
@@ -78,6 +81,7 @@ const SignUpScreen = () => {
       <TextInput
         placeholder="ایمیل خود را وارد کنید"
         value={email}
+        keyboardType="email-address"
         style={style.textInput}
         onChangeText={(text) => setEmail(text)}
       />
@@ -86,6 +90,7 @@ const SignUpScreen = () => {
         placeholder="رمز عبور"
         value={password}
         style={style.textInput}
+        textContentType="password"
         // maxLength={2}
         keyboardType="numeric"
         onChangeText={(text) => setPassword(text)}
@@ -94,6 +99,7 @@ const SignUpScreen = () => {
         placeholder="تکرار رمز عبور"
         value={confirmPass}
         style={style.textInput}
+        textContentType="password"
         // maxLength={2}
         keyboardType="numeric"
         onChangeText={(text) => setConfirmPass(text)}
@@ -114,9 +120,10 @@ const SignUpScreen = () => {
           style={{
             textAlign: "center",
             color: "white",
+            fontFamily: "BoldVazir",
           }}
         >
-          SignUp
+          ثبت نام
         </Text>
       </TouchableOpacity>
     </View>
