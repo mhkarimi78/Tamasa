@@ -7,7 +7,7 @@ class userServices {
       passWordRepeat: passWordRepeat,
       phone: phone,
     });
-  }
+  }   
   login(email, passWord) {
     return AxiosBase.post("Login", {
       email: email,

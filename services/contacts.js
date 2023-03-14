@@ -9,7 +9,7 @@ class contactsService {
         ContactPhone: phoneNumber,
       },
     ]);
-  }
+  }     
   getMyContacts() {
     return AxiosBase.get(`GetMyContacts`);
   }
