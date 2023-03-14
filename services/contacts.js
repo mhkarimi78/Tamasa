@@ -10,7 +10,7 @@ class contactsService {
       },
     ]);
   }     
-  getMyContacts() {
+  getMyContactss() {
     return AxiosBase.get(`GetMyContacts`);
   }
   searchOnMyContacts(searchTerm) {
